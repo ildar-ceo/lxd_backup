@@ -1,6 +1,11 @@
 # lxc_backup
 Scripts for LXC Backup &amp; Restore
 
+Before backup or restore container you must to stop container
+```
+lxc stop test
+```
+
 
 # For backend type dir
 
