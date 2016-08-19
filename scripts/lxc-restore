@@ -1,0 +1,62 @@
+#!/bin/bash
+
+DATE=`date -I`
+LXC_NAME="$1"
+LXC_BACKUP="$2"
+ERROR=0
+
+
+Green='\e[1;32m'        # Green
+Yellow='\e[1;33m'       # Yellow
+NC='\e[0m'              # No Color (нет цвета)
+
+
+
+if [ -z "$LXC_NAME" ]; then
+	echo "Error: lxc container name doesn't set"
+	echo ""
+	ERROR=1
+fi
+
+if [ $ERROR = "0" ] && [ -z "$LXC_BACKUP" ]; then
+	echo "Error: lxc backup file name doesn't set"
+	echo ""
+	ERROR=2
+fi
+
+if [ $ERROR = "0" ] && [ ! -f $LXC_BACKUP ]; then
+	echo "Error: file '$LXC_BACKUP' not found"
+	echo ""
+	ERROR=3
+fi
+
+
+if [ "$ERROR" != "0" ]; then
+	echo "Usage:"
+	echo "  lxc-restore {container-name} {file-name}"
+	echo ""
+	exit $ERROR
+fi
+
+
+echo -e -n "Do you wish to restore container ${Yellow}'$LXC_NAME'${NC} from backup ${Green}'$LXC_BACKUP'${NC} [y/N]?"
+read -p " " yn
+
+if [ -z $yn ]; then
+	exit
+fi
+
+if [ $yn != "y" ] && [ $yn != "Y" ]; then
+	exit
+fi
+
+
+pushd /var/lib/lxd/containers
+
+rm -rf ./$LXC_NAME/*
+tar xvf $LXC_BACKUP
+
+popd
+
+
+

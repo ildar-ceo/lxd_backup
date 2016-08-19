@@ -1,0 +1,57 @@
+#!/bin/bash
+
+DATE=`date -I`
+LXC_NAME="$1"
+LXC_PATH="/var/lib/lxd/containers/$LXC_NAME"
+LXC_SNAPSHOT="snap-$LXC_NAME-$DATE"
+LXC_BACKUP="/backup/lxc/$LXC_NAME"
+
+Green='\e[1;32m'        # Green
+Yellow='\e[1;33m'       # Yellow
+NC='\e[0m'              # No Color (нет цвета)
+
+
+if [ -z "$LXC_NAME" ]; then
+
+	echo "Error: lxc container name doesn't set"
+	echo ""
+	echo "Usage:"
+	echo "  lxc-backup {container-name}"
+	echo ""
+	exit
+
+fi
+
+
+
+echo -e -n "Do you wish backup container ${Yellow}'$LXC_NAME'${NC} [y/N]?"
+read -p " " yn
+
+if [ -z $yn ]; then
+	exit
+fi
+
+if [ $yn != "y" ] && [ $yn != "Y" ]; then
+	exit
+fi
+
+
+
+mkdir -p $LXC_BACKUP
+
+pushd /var/lib/lxd/containers
+
+CMD="tar --exclude='$LXC_NAME/rootfs/dev/*' \
+	--exclude='$LXC_NAME/rootfs/proc/*' \
+	--exclude='$LXC_NAME/rootfs/sys/*' \
+	--exclude='$LXC_NAME/rootfs/tmp/*' \
+	--exclude='$LXC_NAME/rootfs/var/cache/yum/*' \
+	-cjvf $LXC_BACKUP/$LXC_SNAPSHOT.tar.bz2 $LXC_NAME/ > $LXC_BACKUP/$LXC_SNAPSHOT.log"
+
+#echo $CMD
+
+eval $CMD
+
+
+popd
+
