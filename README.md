@@ -47,3 +47,16 @@ lxc-backup test.zfs
 lxc stop test
 lxc-restore test /backup/lxc/test.zfs/snap-test.zfs-2016-08-19.tar.bz2
 ```
+
+
+
+# Import backup as LXD image
+
+```
+lxc image import /backup/lxc/test/snap-test-2016-08-19.tar.bz2 --alias my-new-image
+```
+
+Run image:
+```
+lxc launch me-new-image test2
+```

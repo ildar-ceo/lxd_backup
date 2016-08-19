@@ -36,22 +36,23 @@ if [ $yn != "y" ] && [ $yn != "Y" ]; then
 fi
 
 
+echo -e "Backup containter to ${Green}'$LXC_BACKUP/$LXC_SNAPSHOT.tar.bz2'${NC} "
 
 mkdir -p $LXC_BACKUP
 
-pushd /var/lib/lxd/containers
+pushd /var/lib/lxd/containers/$LXC_NAME > /dev/null
 
-CMD="tar --exclude='$LXC_NAME/rootfs/dev/*' \
-	--exclude='$LXC_NAME/rootfs/proc/*' \
-	--exclude='$LXC_NAME/rootfs/sys/*' \
-	--exclude='$LXC_NAME/rootfs/tmp/*' \
-	--exclude='$LXC_NAME/rootfs/var/cache/yum/*' \
-	-cjvf $LXC_BACKUP/$LXC_SNAPSHOT.tar.bz2 $LXC_NAME/ > $LXC_BACKUP/$LXC_SNAPSHOT.log"
+CMD="tar --exclude='rootfs/dev/*' \
+	--exclude='rootfs/proc/*' \
+	--exclude='rootfs/sys/*' \
+	--exclude='rootfs/tmp/*' \
+	--exclude='rootfs/var/cache/yum/*' \
+	-cjvf $LXC_BACKUP/$LXC_SNAPSHOT.tar.bz2 * > $LXC_BACKUP/$LXC_SNAPSHOT.log"
 
 #echo $CMD
 
 eval $CMD
 
 
-popd
+popd > /dev/null
 

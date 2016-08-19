@@ -30,6 +30,12 @@ if [ $ERROR = "0" ] && [ ! -f $LXC_BACKUP ]; then
 	ERROR=3
 fi
 
+if [ $ERROR = "0" ] && [ ! -d /var/lib/lxd/containers/$LXC_NAME ]; then
+	echo "Error: container directory '/var/lib/lxd/containers/$LXC_NAME' not found"
+	echo ""
+	ERROR=3
+fi
+
 
 if [ "$ERROR" != "0" ]; then
 	echo "Usage:"
@@ -50,13 +56,17 @@ if [ $yn != "y" ] && [ $yn != "Y" ]; then
 	exit
 fi
 
+echo -e "Restore containter to ${Green}'/var/lib/lxd/containers/$LXC_NAME'${NC} "
 
-pushd /var/lib/lxd/containers
+pushd /var/lib/lxd/containers > /dev/null
 
 rm -rf ./$LXC_NAME/*
-tar xvf $LXC_BACKUP
+pushd $LXC_NAME > /dev/null
 
-popd
+tar xvf $LXC_BACKUP > /dev/null
+
+popd > /dev/null
+popd > /dev/null
 
 
 
