@@ -1,5 +1,4 @@
-# lxc_backup
-Scripts for LXC Backup &amp; Restore
+# Scripts Backup &amp; Restore container for LXD
 
 Before backup or restore container you must to stop container
 ```
