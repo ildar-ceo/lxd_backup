@@ -27,7 +27,7 @@ lxc-restore test /backup/lxc/test/snap-test-2016-08-19.tar.bz2
 
 
 
-# For backend type lxc
+# For backend type ZFS
 
 
 ## Backup LXC container
