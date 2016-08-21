@@ -44,7 +44,7 @@ lxc-backup test.zfs
 
 ```bash
 lxc stop test
-lxc-restore test /backup/lxc/test.zfs/snap-test.zfs-2016-08-19.tar.bz2
+lxc-restore test.zfs /backup/lxc/test.zfs/snap-test.zfs-2016-08-19.tar.bz2
 ```
 
 
