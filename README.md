@@ -1,61 +1,58 @@
-# Scripts Backup &amp; Restore container for LXD
+# Создание бэкапов
+Данный метод создает бэкапы контейнеров как LXD образы, готовые к импорту. В идеале нужно создавать снимки и отправлять их в приватный репозиторий LXD. Но иногда, этого сделать нельзя. Например, у небольшой компании нет возможности покупать еще один сервер. В этом случае можно обойтись простым решением tar + Amazon S3. 
 
-Before backup or restore container you must to stop container
+Скачайте готовые скрипты для создания и восстановления бэкапов:
+
+```bash
+wget https://github.com/vistoyn/lxd_backup/raw/1.1/scripts/lxc-backup -O "/usr/local/bin/lxc-backup"
+wget https://github.com/vistoyn/lxd_backup/raw/1.1/scripts/lxc-restore -O "/usr/local/bin/lxc-restore"
 ```
-lxc stop test
+Установите флаг выполнения для скриптов:
+
+```bash
+chmod +x /usr/local/bin/lxc-restore
+chmod +x /usr/local/bin/lxc-backup
 ```
+Перед созданием и восстановлением бэкапов нужно остановить работающий контейнер. Можно, в принципе, делать бэкап на работающем контейнере, но при создании бэкапа возможна потеря некоторых данных (зависит от установленных программ в контейнере).
 
+## Для dir
 
-# For backend type dir
-
-## Backup LXC container
-
+Данная команда создаст бэкап контейнера test, сожмет файл в архив и сохранит его на диске в папке /backup/lxc/test:
 
 ```bash
 lxc stop test
 lxc-backup test
 ```
-
-
-## Restore LXC container
-
+Восстановление бэкапа из снимка:
 
 ```bash
-lxc stop test
 lxc-restore test /backup/lxc/test/snap-test-2016-08-19.tar.bz2
 ```
+## Для zfs
+Для ZFS после имени контейнера нужно добавлять «.zfs»
 
-
-
-# For backend type ZFS
-
-
-## Backup LXC container
-
+Создание бэкапа:
 
 ```bash
 lxc stop test
 lxc-backup test.zfs
 ```
 
+Восстановление бэкапа из снимка:
+```bash
+lxc-stop test
+lxc-restore test.zfs /backup/lxc/test/snap-test.zfs-2016-08-19.tar.bz2
+```
+# Импорт бэкапа
+На новом хосте иногда потребуется создать контейнер из бэкапа. Для этого нужно сначала импортировать образ, а затем его запустить как контейнер.
 
-## Restore LXC container
-
+Команда импорта бэкапа как образа LXD:
 
 ```bash
-lxc stop test
-lxc-restore test.zfs /backup/lxc/test.zfs/snap-test.zfs-2016-08-19.tar.bz2
-```
-
-
-
-# Import backup as LXD image
-
-```
 lxc image import /backup/lxc/test/snap-test-2016-08-19.tar.bz2 --alias my-new-image
 ```
+Команда запуска образа как контейнера:
 
-Run image:
-```
+```bash
 lxc launch me-new-image test2
 ```
