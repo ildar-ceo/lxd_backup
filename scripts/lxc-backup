@@ -42,15 +42,20 @@ mkdir -p $LXC_BACKUP
 
 pushd /var/lib/lxd/containers/$LXC_NAME > /dev/null
 
+lxc config show $LXC_NAME > ./config
 CMD="tar --exclude='rootfs/dev/*' \
-	--exclude='rootfs/proc/*' \
-	--exclude='rootfs/sys/*' \
-	--exclude='rootfs/tmp/*' \
-	--exclude='rootfs/var/cache/yum/*' \
-	-cjvf $LXC_BACKUP/$LXC_SNAPSHOT.tar.bz2 * > $LXC_BACKUP/$LXC_SNAPSHOT.log"
+        --exclude='rootfs/proc/*' \
+        --exclude='rootfs/sys/*' \
+        --exclude='rootfs/tmp/*' \
+        --exclude='rootfs/var/cache/yum/*' "
+
+if [ -f "./exclude.list" ]; then
+        CMD="$CMD --exclude-from='./exclude.list' "
+fi
+
+CMD="$CMD -cjvf $LXC_BACKUP/$LXC_SNAPSHOT.tar.bz2 * > $LXC_BACKUP/$LXC_SNAPSHOT.log"
 
 #echo $CMD
-
 eval $CMD
 
 
