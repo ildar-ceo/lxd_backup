@@ -4,8 +4,8 @@
 Скачайте готовые скрипты для создания и восстановления бэкапов:
 
 ```bash
-wget https://github.com/vistoyn/lxd_backup/raw/1.1/scripts/lxc-backup -O "/usr/local/bin/lxc-backup"
-wget https://github.com/vistoyn/lxd_backup/raw/1.1/scripts/lxc-restore -O "/usr/local/bin/lxc-restore"
+wget https://github.com/vistoyn/lxd_backup/raw/1.2/scripts/lxc-backup -O "/usr/local/bin/lxc-backup"
+wget https://github.com/vistoyn/lxd_backup/raw/1.2/scripts/lxc-restore -O "/usr/local/bin/lxc-restore"
 ```
 Установите флаг выполнения для скриптов:
 
